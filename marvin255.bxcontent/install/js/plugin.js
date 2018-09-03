@@ -76,7 +76,7 @@
                 var control = controlsFactory.createInstance(settings.controls[k].type, settings.controls[k]);
                 if (control) {
                     control.setParent(self);
-                    controls.set(settings.controls[k].name, control);
+                    controls.set(k, control);
                 }
             }
         }
@@ -259,16 +259,16 @@
             $moveUp.off('click').on('click', function () {
                 var $upperSibling = $block.prev();
                 if ($upperSibling.length) {
-                    $block.detach().insertBefore($upperSibling);
-                    $(document).trigger( "updateBitrixScripts" );
+                    $block.insertBefore($upperSibling);
+                    self.renderSnippet($block, snippet, key);
                 }
                 return false;
             });
             $moveDown.off('click').on('click', function () {
                 var $lowerSibling = $block.next();
                 if ($lowerSibling.length) {
-                    $block.detach().insertAfter($lowerSibling);
-                    $(document).trigger( "updateBitrixScripts" );
+                    $block.insertAfter($lowerSibling);
+                    self.renderSnippet($block, snippet, key);
                 }
                 return false;
             });
@@ -312,6 +312,31 @@
             if (!$button.length) {
                 $button = $('<button />').text('Добавить блок').appendTo($selectorBlock);
             }
+
+            var collectionName = this.collection.name;
+            $('<a class="marvin255bxcontent-copy marvin255bxcontent-button" title="Скопировать код компонента"></a>').appendTo($selectorBlock)
+                .on('click',function(event) {
+                    var textarea = $("[name='"+collectionName+"']");
+                    textarea.val(textarea.text()).select();
+                    textarea.show().select();
+                    document.execCommand('copy');
+                    textarea.hide();
+                    alert('Код снипета скопирован в буфер обмена');
+                });
+
+            $('<a class="marvin255bxcontent-load marvin255bxcontent-button" title="Вставить код"></a>').appendTo($selectorBlock)
+                .on('click',function(event) {
+                    var check = prompt('Внимание! Внесённые изменения могут удалить всю информацию в данном блоке. Для продолжения наберите "34"','');
+                    if(check==34){
+                        var textarea = $("[name='"+collectionName+"']");
+                        textarea.val(textarea.text()).css({
+                            'width': '100%',
+                            'height': '100px',
+                        }).show();
+                        $('.marvin255bxcontent-snippets-block').remove();
+                    }
+                });
+
             $button.off('click').on('click', function () {
                 var type = $select.val();
                 var snippet = type ? self.snippetsFactory.createInstance(type) : null;
