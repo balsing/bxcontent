@@ -23,10 +23,10 @@ class UserTypeContent
     public function GetUserTypeDescription()
     {
         return [
-            'USER_TYPE_ID' => 'Marvin255BxcontentUf',
-            'CLASS_NAME' => __CLASS__,
-            'DESCRIPTION' => Loc::getMessage('BX_CONTENT_PROPERTY_TYPE_NAME'),
-            'BASE_TYPE' => 'string',
+                'USER_TYPE_ID' => 'Marvin255BxcontentUf',
+                'CLASS_NAME' => __CLASS__,
+                'DESCRIPTION' => Loc::getMessage('BX_CONTENT_PROPERTY_TYPE_NAME'),
+                'BASE_TYPE' => 'string',
         ];
     }
 
@@ -45,8 +45,8 @@ class UserTypeContent
         $allSnippets = SnippetManager::getInstance()->getSnippetsList();
         if ($allSnippets) {
             $checked = isset($arUserField['SETTINGS']['allowed_snippets'])
-                ? $arUserField['SETTINGS']['allowed_snippets']
-                : [];
+                    ? $arUserField['SETTINGS']['allowed_snippets']
+                    : [];
             $return .= '<tr>';
             $return .= '<td style="vertical-align: top;">' . Loc::getMessage('BX_CONTENT_SELECT_SNIPPETS') . ':</td>';
             $return .= '<td>';
@@ -54,7 +54,9 @@ class UserTypeContent
                 $isChecked = in_array($key, $checked);
                 $return .= '<div style="margin: 0 0 0.3em;">';
                 $return .= '<label>';
-                $return .= '<input type="checkbox" value="' . htmlentities($key) . '" name="' . $arHtmlControl['NAME'] . '[allowed_snippets][]"' . ($isChecked ? ' checked' : '') . '>';
+                $return .= '<input type="checkbox" value="' . htmlentities(
+                                $key
+                        ) . '" name="' . $arHtmlControl['NAME'] . '[allowed_snippets][]"' . ($isChecked ? ' checked' : '') . '>';
                 $return .= ' ' . htmlspecialchars($snippet->getLabel());
                 $return .= '</label>';
                 $return .= '</div>';
@@ -76,8 +78,8 @@ class UserTypeContent
     public function PrepareSettings($arUserField)
     {
         return isset($arUserField['SETTINGS'])
-            ? $arUserField['SETTINGS']
-            : [];
+                ? $arUserField['SETTINGS']
+                : [];
     }
 
     /**
@@ -92,12 +94,10 @@ class UserTypeContent
     {
         CJSCore::Init(['jquery']);
         SnippetManager::getInstance()->registerAssets(Asset::getInstance());
-
         $id = 'Marvin255BxcontentUf-' . intval($field['ID']);
         $options = isset($field['SETTINGS']) && is_array($field['SETTINGS'])
-            ? json_encode($field['SETTINGS'])
-            : 'null';
-
+                ? json_encode($field['SETTINGS'])
+                : 'null';
         $return = '<textarea style="display: none;" id="' . $id . '" name="' . htmlentities($control['NAME']) . '">';
         $return .= htmlentities(isset($field['VALUE']) ? $field['VALUE'] : '');
         $return .= '</textarea>';
@@ -113,17 +113,16 @@ class UserTypeContent
     {
         return 'text';
     }
-    
+
     /**
-     * Преобразуем массив в строку перед сохранением результатов поля
+     * Преобразуем массив в строку перед сохранением результатов поля.
      *
      * @return string
      */
     public function OnBeforeSave($arUserField, $value)
     {
-        $value = is_array($value) || is_object($value)
-            ? json_encode($value)
-            : $value;
-        return $value;
+        return is_array($value) || is_object($value)
+                ? json_encode($value)
+                : $value;
     }
 }
